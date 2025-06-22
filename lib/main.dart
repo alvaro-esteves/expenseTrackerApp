@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+//*import 'package:flutter/services.dart'; //*for locking the orientation
 import 'package:expense_tracker/widgets/expenses.dart';
 
 //!dica de theming, criar uma paleta de cores para Light mode e dark mode
@@ -14,6 +14,11 @@ var kDarkColorScheme = ColorScheme.fromSeed(
 );
 
 void main() {
+  //*locking otientation up
+  /*WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]).then((fn) {*/
   runApp(
     MaterialApp(
       //todo dark mode theme
@@ -66,4 +71,5 @@ void main() {
       home: Expenses(),
     ),
   );
+  //*});
 }
