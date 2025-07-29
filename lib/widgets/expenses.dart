@@ -75,6 +75,8 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     Widget mainContent = Center(
       child: Text(
           'No Expenses Found! Add some...'), //*message displayed when there are no expenses
@@ -97,14 +99,26 @@ class _ExpensesState extends State<Expenses> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Chart(expenses: _registeredExpenses),
-          Expanded(
-              //*prevents errors when dealing with diff kind of lists or columns
-              child: mainContent),
-        ],
-      ),
+      body: width < 600
+          ? Column(
+              //*if width less than 600, keep the layout
+              children: [
+                Chart(expenses: _registeredExpenses),
+                Expanded(
+                    //*prevents errors when dealing with diff kind of lists or columns
+                    child: mainContent),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(
+                  child: Chart(expenses: _registeredExpenses),
+                ),
+                Expanded(
+                    //*prevents errors when dealing with diff kind of lists or columns
+                    child: mainContent),
+              ],
+            ), //*if width greater that 600 change the layout
     );
   }
 }

@@ -18,7 +18,7 @@ void main() {
   /*WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
-  ]).then((fn) {*/
+  ]).then((fn) {{runApp goes in here})*/
   runApp(
     MaterialApp(
       //todo dark mode theme
