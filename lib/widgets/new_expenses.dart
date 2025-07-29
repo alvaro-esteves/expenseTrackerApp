@@ -109,7 +109,7 @@ class _NewExpenseState extends State<NewExpense> {
             children: [
               TextField(
                 controller:
-                    _titleController, //*triggered whenever the value in the textField changes
+                    _titleController, //*triggered whenever the value in the textField change
                 maxLength: 50,
                 decoration: InputDecoration(
                   label: Text('Title'),
