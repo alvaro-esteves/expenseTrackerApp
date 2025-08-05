@@ -30,6 +30,7 @@ class _ExpensesState extends State<Expenses> {
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
       //*making sure the keyboard does not overlap the inputs
+      useSafeArea: true, //*avoids camera and other features overlapping
       isScrollControlled: true,
       context: context,
       builder: (ctx) =>
@@ -75,6 +76,8 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     Widget mainContent = Center(
       child: Text(
           'No Expenses Found! Add some...'), //*message displayed when there are no expenses
@@ -97,14 +100,25 @@ class _ExpensesState extends State<Expenses> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Chart(expenses: _registeredExpenses),
-          Expanded(
-              //*prevents errors when dealing with diff kind of lists or columns
-              child: mainContent),
-        ],
-      ),
+      body: width < 600
+          ? Column(
+              children: [
+                Chart(expenses: _registeredExpenses),
+                Expanded(
+                    //*prevents errors when dealing with diff kind of lists or columns
+                    child: mainContent),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(
+                  child: Chart(expenses: _registeredExpenses),
+                ),
+                Expanded(
+                    //*prevents errors when dealing with diff kind of lists or columns
+                    child: mainContent),
+              ],
+            ),
     );
   }
 }

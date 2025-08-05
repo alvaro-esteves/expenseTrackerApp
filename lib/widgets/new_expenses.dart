@@ -95,92 +95,102 @@ class _NewExpenseState extends State<NewExpense> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16, 48, 16, 16),
-      child: Column(
-        children: [
-          TextField(
-            controller:
-                _titleController, //*triggered whenever the value in the textField changes
-            maxLength: 50,
-            decoration: InputDecoration(
-              label: Text('Title'),
-            ),
-          ),
-          Row(
+    final keyboardSpace = MediaQuery.of(context)
+        .viewInsets
+        .bottom; //*getting the amount space taken up by the keyboard
+    return SizedBox(
+      height: double
+          .infinity, //*makes sure the modal occupies the entire screen in landscape mode
+      child: SingleChildScrollView(
+        //*makes the modal scrollable when in landscape
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
+          child: Column(
             children: [
-              Expanded(
-                child: TextField(
-                  controller: _amountController,
-                  keyboardType:
-                      TextInputType.number, //*since we're dealing with a number
-                  decoration: InputDecoration(
-                    prefixText: '\$ ',
-                    label: Text('Amount'),
+              TextField(
+                controller:
+                    _titleController, //*triggered whenever the value in the textField changes
+                maxLength: 50,
+                decoration: InputDecoration(
+                  label: Text('Title'),
+                ),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _amountController,
+                      keyboardType: TextInputType
+                          .number, //*since we're dealing with a number
+                      decoration: InputDecoration(
+                        prefixText: '\$ ',
+                        label: Text('Amount'),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  //*rows inside of rows cause problems and for that we use expanded
-                  children: [
-                    Text(
-                      _selectedDate == null
-                          ? 'No date selected'
-                          : formatter.format(_selectedDate!),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      //*rows inside of rows cause problems and for that we use expanded
+                      children: [
+                        Text(
+                          _selectedDate == null
+                              ? 'No date selected'
+                              : formatter.format(_selectedDate!),
+                        ),
+                        IconButton(
+                          onPressed: _presentDatePicker,
+                          icon: Icon(Icons.calendar_month),
+                        ),
+                      ],
                     ),
-                    IconButton(
-                      onPressed: _presentDatePicker,
-                      icon: Icon(Icons.calendar_month),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+              SizedBox(height: 16),
+              Row(
+                children: [
+                  DropdownButton(
+                      value:
+                          _selectedCategory, //*ensures the value stays on the category after selected
+                      items: Category.values
+                          .map(
+                            (category) => DropdownMenuItem(
+                              value: category,
+                              child: Text(
+                                //*child defines what will be shown on the screen
+                                category.name.toUpperCase(),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        if (value == null) {
+                          return;
+                        } //* if value is null, the category is never selected
+                        setState(() {
+                          _selectedCategory = value;
+                        });
+                      }), //* the value here is the one selected from the drop down
+                  Spacer(),
+                  ElevatedButton(
+                    onPressed: _submitExpenseData,
+                    child: Text('Save Expense'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(
+                          context); //*makes cancel button close the overlay
+                    },
+                    child: Text('Cancel'),
+                  ),
+                ],
+              )
             ],
           ),
-          SizedBox(height: 16),
-          Row(
-            children: [
-              DropdownButton(
-                  value:
-                      _selectedCategory, //*ensures the value stays on the category after selected
-                  items: Category.values
-                      .map(
-                        (category) => DropdownMenuItem(
-                          value: category,
-                          child: Text(
-                            //*child defines what will be shown on the screen
-                            category.name.toUpperCase(),
-                          ),
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (value) {
-                    if (value == null) {
-                      return;
-                    } //* if value is null, the category is never selected
-                    setState(() {
-                      _selectedCategory = value;
-                    });
-                  }), //* the value here is the one selected from the drop down
-              Spacer(),
-              ElevatedButton(
-                onPressed: _submitExpenseData,
-                child: Text('Save Expense'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(
-                      context); //*makes cancel button close the overlay
-                },
-                child: Text('Cancel'),
-              ),
-            ],
-          )
-        ],
+        ),
       ),
     );
   }
